@@ -1,0 +1,135 @@
+<odoo>
+    <data>
+        
+
+        <!-- Action for Customer Installments -->
+        <record id="action_customer_installments" model="ir.actions.act_window">
+            <field name="name">Customer Installments</field>
+            <field name="res_model">installment.installment</field>
+            <field name="view_mode">tree,form,kanban,search</field>
+        </record>
+        <!-- Main Menu -->
+        <menuitem id="menu_installment" name="Installments" action="action_customer_installments" sequence="10"/>
+        <!-- Sub Menu -->
+        <menuitem id="menu_customer_installments" name="Customer Installments" parent="menu_installment" action="action_customer_installments"/>
+
+        
+
+        <!-- View for Installment Form -->
+        <record id="view_installment_form" model="ir.ui.view">
+            <field name="name">installment.installment.form</field>
+            <field name="model">installment.installment</field>
+            <field name="arch" type="xml">
+                <form>
+                    <!-- Existing fields -->
+                    <field name="state" readonly="1"/>
+                    <field name="customer"/>
+
+                    <!-- ... (other fields and tabs) ... -->
+
+                    <!-- Display the invoice count -->
+                    <field name="invoice_count"/>
+
+                    <footer>
+                        <button name="action_open" string="Open" type="object" class="btn-primary"/>
+                        <button name="action_payment" string="Payment" type="object" class="btn-warning"/>
+                        <button name="action_settlement" string="Settlement" type="object" class="btn-success"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree View -->
+        <record id="view_installment_tree" model="ir.ui.view">
+            <field name="name">installment.installment.tree</field>
+            <field name="model">installment.installment</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="state"/>
+                    <field name="date"/>
+                    <field name="customer"/>
+                    <field name="amount"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Kanban View -->
+        <record id="view_installment_kanban" model="ir.ui.view">
+            <field name="name">installment.installment.kanban</field>
+            <field name="model">installment.installment</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="name"/>
+                    <field name="state"/>
+                    <field name="date"/>
+                    <field name="customer"/>
+                    <field name="amount"/>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="view_installment_search" model="ir.ui.view">
+            <field name="name">installment.installment.search</field>
+            <field name="model">installment.installment</field>
+            <field name="arch" type="xml">
+                <search>
+                    <!-- Define search filters -->
+                    <group>
+                        <filter string="Draft Installments" name="draft" domain="[('state', '=', 'draft')]"/>
+                        <filter string="Open Installments" name="open" domain="[('state', '=', 'open')]"/>
+                        <filter string="Paid Installments" name="paid" domain="[('state', '=', 'paid')]"/>
+                    </group>
+                    <separator/>
+                    <!-- Add more search filters if needed -->
+                </search>
+            </field>
+        </record>
+
+        <!-- Pivot View -->
+        <record id="view_installment_pivot" model="ir.ui.view">
+            <field name="name">installment.installment.pivot</field>
+            <field name="model">installment.installment</field>
+            <field name="arch" type="xml">
+                <pivot>
+                    <field name="customer" type="row"/>
+                    <field name="state" type="col"/>
+                    <field name="amount" type="measure" operator="sum"/>
+                </pivot>
+            </field>
+        </record>
+
+        <!-- Graph View -->
+        <record id="view_installment_graph" model="ir.ui.view">
+            <field name="name">installment.installment.graph</field>
+            <field name="model">installment.installment</field>
+            <field name="arch" type="xml">
+                <graph string="Installments Graph" type="bar">
+                    <field name="customer"/>
+                    <field name="amount" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+                <!-- Payment Wizard Form View -->
+        <record id="view_installment_payment_wizard_form" model="ir.ui.view">
+            <field name="name">installment.payment.wizard.form</field>
+            <field name="model">installment.payment.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button string="Make Payment" type="object" name="action_make_payment" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </header>
+                    <group>
+                        <field name="amount"/>
+                        <field name="installment_id" invisible="1"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>
